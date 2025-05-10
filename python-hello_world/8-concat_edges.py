@@ -1,4 +1,4 @@
 #!/usr/bin/python3
-print((__import__('sys').argv[0][39:66] + 
-      __import__('sys').argv[0][106:112] + 
-      __import__('sys').argv[0][:6]))
+str = "Python is an interpreted, interactive, object-oriented programming\
+ language that combines remarkable power with very clear syntax"
+print(str[39:66] + str[106:112] + str[:6])
