@@ -14,14 +14,13 @@ def text_indentation(text):
     if not isinstance(text, str):
         raise TypeError("text must be a string")
 
-    result = []
     i = 0
     while i < len(text):
-        result.append(text[i])
         if text[i] in ".?:":
-            result.append("\n\n")
+            print(text[i], end="\n\n")
             # Skip spaces after delimiter
             while i + 1 < len(text) and text[i + 1] == ' ':
                 i += 1
+        else:
+            print(text[i], end="")
         i += 1
-    print("".join(result), end="")
