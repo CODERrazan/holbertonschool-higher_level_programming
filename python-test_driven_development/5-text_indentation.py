@@ -23,5 +23,5 @@ def text_indentation(text):
             # Skip spaces after delimiter
             while i + 1 < len(text) and text[i + 1] == ' ':
                 i += 1
-        i += 1    
+        i += 1
     print("".join(result), end="")
