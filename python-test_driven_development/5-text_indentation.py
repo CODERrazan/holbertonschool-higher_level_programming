@@ -17,10 +17,11 @@ def text_indentation(text):
     i = 0
     while i < len(text):
         if text[i] in ".?:":
-            print(text[i], end="\n\n")
+            print(text[i] + "\n")
             # Skip spaces after delimiter
             while i + 1 < len(text) and text[i + 1] == ' ':
                 i += 1
-        else:
-            print(text[i], end="")
+            i += 1
+            continue
+        print(text[i], end="")
         i += 1
