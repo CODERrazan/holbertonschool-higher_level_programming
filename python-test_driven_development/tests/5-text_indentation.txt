@@ -1,17 +1,26 @@
+This module contains doctests for text_indentation function.
+
 >>> text_indentation = __import__('5-text_indentation').text_indentation
->>> text_indentation("Hello.World?How:Now")
+
+Normal case:
+>>> text_indentation("Hello. How are you? Good: I hope")
+Hello.
+How are you?
+
+Good:
+I hope
+
+Edge cases:
+>>> text_indentation("")
+(no output)
+
+>>> text_indentation("Hello.   How are you?")
 Hello.
 
-World?
+How are you?
 
-How:
-
-Now
->>> text_indentation("Hello.  World?  How: Now")
-Hello.
-
-World?
-
-How:
-
-Now
+Error cases:
+>>> text_indentation(123)
+Traceback (most recent call last):
+    ...
+TypeError: text must be a string
