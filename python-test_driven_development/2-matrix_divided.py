@@ -3,7 +3,7 @@
 
 
 def matrix_divided(matrix, div):
-    """Divides all elements of a matrix by a number 
+    """Divides all elements of a matrix by a number
     Args:
         matrix: List of lists of integers/floats
         div: Number to divide by (cannot be zero)
