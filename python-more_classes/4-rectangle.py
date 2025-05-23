@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 """Defines a class Rectangle with __str__ and __repr__ methods."""
 
