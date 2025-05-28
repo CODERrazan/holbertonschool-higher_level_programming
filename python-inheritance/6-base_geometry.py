@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 """Defines BaseGeometry class with area method."""
-
-
 class BaseGeometry:
     """Base geometry class with unimplemented area method."""
 
