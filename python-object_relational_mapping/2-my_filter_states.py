@@ -1,39 +1,45 @@
 #!/usr/bin/python3
 """
-Script that takes a state name as argument and displays matching states
-from the database hbtn_0e_0_usa using MySQLdb with secure parameterized queries
+Script that filters states by user input from hbtn_0e_0_usa database
+using string formatting for the SQL query.
 """
 
 import MySQLdb
 import sys
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Usage: ./2-my_filter_states.py <username> <password> <database> <state_name>")
-        sys.exit(1)
+    # Get command line arguments
+    username = sys.argv[1]
+    password = sys.argv[2]
+    db_name = sys.argv[3]
+    state_name = sys.argv[4]
 
-    username, password, db_name, state_name = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+    # Connect to MySQL server
+    db = MySQLdb.connect(
+        host="localhost",
+        port=3306,
+        user=username,
+        passwd=password,
+        db=db_name,
+        charset="utf8"
+    )
 
-    try:
-        db = MySQLdb.connect(
-            host="localhost",
-            port=3306,
-            user=username,
-            passwd=password,
-            db=db_name,
-            charset="utf8"
-        )
-        
-        with db.cursor() as cur:
-            cur.execute(
-                "SELECT * FROM states WHERE BINARY name = %s ORDER BY id ASC",
-                (state_name,)
-            )
-            for row in cur.fetchall():
-                print(row)
-                
-    except MySQLdb.Error as e:
-        print(f"MySQL Error [{e.args[0]}]: {e.args[1]}")
-    finally:
-        if 'db' in locals() and db.open:
-            db.close()
+    # Create cursor object
+    cur = db.cursor()
+
+    # Create SQL query using string formatting as required
+    query = "SELECT * FROM states WHERE name = '{}' ORDER BY id ASC".format(state_name)
+    
+    # Execute the query
+    cur.execute(query)
+
+    # Fetch all matching rows
+    rows = cur.fetchall()
+
+    # Display results
+    for row in rows:
+        print(row)
+
+    # Close cursor and connection
+    cur.close()
+    db.close()
