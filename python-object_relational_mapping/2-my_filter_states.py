@@ -1,23 +1,24 @@
 #!/usr/bin/python3
 """
-Script that takes a state name as argument and displays
-all matching states from the database hbtn_0e_0_usa
+This script takes a state name as input and displays matching states
+from the hbtn_0e_0_usa database, using MySQLdb for the connection.
+It demonstrates safe database querying with parameterized queries.
 """
 
 import MySQLdb
 import sys
 
-if __name__ == "__main__":
-    # Validate argument count
-    if len(sys.argv) != 5:
-        print("Usage: ./2-my_filter_states.py <username> <password> <database> <state_name>")
-        sys.exit(1)
-
-    # Get arguments
-    username, password, db_name, state_name = sys.argv[1:5]
-
+def get_matching_states(username, password, db_name, state_name):
+    """
+    Retrieves and displays states matching the given name.
+    
+    Args:
+        username: MySQL username
+        password: MySQL password
+        db_name: Database name
+        state_name: State name to search for
+    """
     try:
-        # Connect to MySQL
         db = MySQLdb.connect(
             host="localhost",
             port=3306,
@@ -27,24 +28,24 @@ if __name__ == "__main__":
             charset="utf8"
         )
         
-        # Create cursor
-        cur = db.cursor()
-        
-        # Create query using format() as required
-        query = "SELECT * FROM states WHERE name = '{}' ORDER BY id ASC".format(state_name)
-        
-        # Execute query
-        cur.execute(query)
-        
-        # Fetch and display results
-        for row in cur.fetchall():
-            print(row)
+        with db.cursor() as cur:
+            query = "SELECT * FROM states WHERE BINARY name = %s ORDER BY id ASC"
+            cur.execute(query, (state_name,))
             
+            for row in cur.fetchall():
+                print(row)
+                
     except MySQLdb.Error as e:
-        print("MySQL Error:", e)
+        print(f"Database error occurred: {e}")
     finally:
-        # Clean up
-        if 'cur' in locals():
-            cur.close()
-        if 'db' in locals():
+        if db:
             db.close()
+
+if __name__ == "__main__":
+    if len(sys.argv) != 5:
+        print("Usage: ./2-my_filter_states.py <username> <password> <database> <state_name>")
+        sys.exit(1)
+        
+    _, username, password, db_name, state_name = sys.argv
+    get_matching_states(username, password, db_name, state_name)
+
