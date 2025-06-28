@@ -48,4 +48,3 @@ if __name__ == "__main__":
         
     _, username, password, db_name, state_name = sys.argv
     get_matching_states(username, password, db_name, state_name)
-
