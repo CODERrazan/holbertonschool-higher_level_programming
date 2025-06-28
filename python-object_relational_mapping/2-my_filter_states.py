@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-Displays all values in the states table of hbtn_0e_0_usa where
-name matches the user input. Results sorted by id ascending.
+Displays all values in the states table where name matches the user input.
+Usage: ./2-my_filter_states.py <username> <password> <database> <state_name>
 """
 
 import MySQLdb
@@ -20,9 +20,11 @@ if __name__ == "__main__":
     )
 
     cur = db.cursor()
+    # Escape single quotes in user input to prevent malformed queries
+    safe_state = state_name.replace("'", "''")
     query = (
         "SELECT * FROM states WHERE name = '{}' "
-        "ORDER BY id ASC".format(state_name)
+        "ORDER BY id ASC".format(safe_state)
     )
     cur.execute(query)
     for row in cur.fetchall():
