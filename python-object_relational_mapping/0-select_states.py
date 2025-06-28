@@ -1,41 +1,42 @@
 #!/usr/bin/python3
-"""Write a script that lists all states from the database hbtn_0e_0_usa"""
+"""
+Lists all states from the database hbtn_0e_0_usa
+Usage: ./0-select_states.py <mysql username> <mysql password> <database name>
+"""
 import MySQLdb
 import sys
 
-def states(username, userPassword, database_name):
+
+def list_states(username, password, dbname):
     """
-    Connects to a MySQL database and executes a query to retrieve all states.
-    Results are sorted in ascending order by states.id.
+    Connects to MySQL database and lists all states sorted by id
+    Args:
+        username: MySQL username
+        password: MySQL password
+        dbname: Database name
     """
+    try:
+        db = MySQLdb.connect(
+            host="localhost",
+            port=3306,
+            user=username,
+            passwd=password,
+            db=dbname
+        )
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM states ORDER BY id ASC")
+        states = cursor.fetchall()
+        for state in states:
+            print(state)
+    except MySQLdb.Error as e:
+        print(f"Error connecting to MySQL: {e}")
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'db' in locals():
+            db.close()
 
-    # Connect to the MySQL database
-    db = MySQLdb.connect(host="localhost", port=3306,
-                         user=username, passwd=userPassword,
-                         db=database_name)
-
-    # Create a cursor object
-    cur = db.cursor()
-
-    # Execute the query to select all states ordered by states.id
-    cur.execute("SELECT * FROM states ORDER BY states.id")
-
-    # Fetch all results from the executed query
-    rows = cur.fetchall()
-
-    # Print each row in the fetched results
-    for row in rows:
-        print(row)
-
-    # Close the cursor and database connection
-    cur.close()
-    db.close()
 
 if __name__ == "__main__":
-    # Take command line arguments for username, password, and database name
-    user = sys.argv[1]
-    passw = sys.argv[2]
-    bd = sys.argv[3]
-
-    # Call the states function with the provided arguments
-    states(user, passw, bd)
+    if len(sys.argv) == 4:
+        list_states(sys.argv[1], sys.argv[2], sys.argv[3])
