@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """
-Lists all states with a name starting with N from database hbtn_0e_0_usa
-Usage: ./1-filter_states.py <mysql username> <mysql password> <database name>
+Lists all states with a name starting with N (upper N) from the database hbtn_0e_0_usa.
+The script takes 3 arguments: mysql username, mysql password, and database name.
+Results are sorted in ascending order by states.id and displayed as tuples.
 """
 import MySQLdb
 import sys
@@ -9,11 +10,13 @@ import sys
 
 def filter_states(username, password, dbname):
     """
-    Filters and displays states starting with 'N'
+    Connects to a MySQL database and lists all states where the name starts with 'N',
+    sorted by state ID in ascending order.
+
     Args:
-        username: MySQL username
-        password: MySQL password
-        dbname: Database name
+        username (str): MySQL username
+        password (str): MySQL password
+        dbname (str): Database name
     """
     try:
         db = MySQLdb.connect(
@@ -21,18 +24,20 @@ def filter_states(username, password, dbname):
             port=3306,
             user=username,
             passwd=password,
-            db=dbname
+            db=dbname,
+            charset="utf8"
         )
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM states WHERE name LIKE 'N%' ORDER BY id ASC")
-        states = cursor.fetchall()
-        for state in states:
-            print(state)
+        with db.cursor() as cursor:
+            cursor.execute("""
+                SELECT * FROM states
+                WHERE name LIKE BINARY 'N%'
+                ORDER BY id ASC
+            """)
+            for state in cursor.fetchall():
+                print(state)
     except MySQLdb.Error as e:
-        print(f"Error connecting to MySQL: {e}")
+        print(f"MySQL Error {e.args[0]}: {e.args[1]}")
     finally:
-        if 'cursor' in locals():
-            cursor.close()
         if 'db' in locals():
             db.close()
 
