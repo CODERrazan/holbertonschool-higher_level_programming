@@ -1,26 +1,20 @@
 #!/usr/bin/python3
 """
-Script that takes a state name as argument and displays
-all matching states from the database hbtn_0e_0_usa
+Script that takes a state name as argument and displays matching states
+from the database hbtn_0e_0_usa using MySQLdb with secure parameterized queries
 """
 
 import MySQLdb
 import sys
 
 if __name__ == "__main__":
-    # Check for correct number of arguments
     if len(sys.argv) != 5:
         print("Usage: ./2-my_filter_states.py <username> <password> <database> <state_name>")
         sys.exit(1)
 
-    # Get command line arguments
-    username = sys.argv[1]
-    password = sys.argv[2]
-    db_name = sys.argv[3]
-    state_name = sys.argv[4]
+    username, password, db_name, state_name = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 
     try:
-        # Connect to MySQL server
         db = MySQLdb.connect(
             host="localhost",
             port=3306,
@@ -29,28 +23,17 @@ if __name__ == "__main__":
             db=db_name,
             charset="utf8"
         )
-
-        # Create cursor object
-        cur = db.cursor()
-
-        # Create query with parameterized input
-        query = "SELECT * FROM states WHERE name LIKE BINARY %s ORDER BY id ASC"
         
-        # Execute the query with the state_name as parameter
-        cur.execute(query, (state_name,))
-
-        # Fetch all matching rows
-        rows = cur.fetchall()
-
-        # Display results
-        for row in rows:
-            print(row)
-
+        with db.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM states WHERE BINARY name = %s ORDER BY id ASC",
+                (state_name,)
+            )
+            for row in cur.fetchall():
+                print(row)
+                
     except MySQLdb.Error as e:
-        print("MySQL Error:", e)
+        print(f"MySQL Error [{e.args[0]}]: {e.args[1]}")
     finally:
-        # Close cursor and connection if they exist
-        if 'cur' in locals():
-            cur.close()
-        if 'db' in locals():
+        if 'db' in locals() and db.open:
             db.close()
