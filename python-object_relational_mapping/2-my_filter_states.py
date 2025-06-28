@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """
-Displays all values in the states table where name matches the user input.
-Usage: ./2-my_filter_states.py <username> <password> <database> <state_name>
+Displays all values in the states table where name matches user input.
 """
 
 import MySQLdb
@@ -20,11 +19,9 @@ if __name__ == "__main__":
     )
 
     cur = db.cursor()
-    # Escape single quotes in user input to prevent malformed queries
-    safe_state = state_name.replace("'", "''")
     query = (
         "SELECT * FROM states WHERE name = '{}' "
-        "ORDER BY id ASC".format(safe_state)
+        "ORDER BY id ASC".format(state_name)
     )
     cur.execute(query)
     for row in cur.fetchall():
