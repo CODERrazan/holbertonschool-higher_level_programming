@@ -1,19 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home</title>
-</head>
-<body>
-    {% include 'header.html' %}
-    
-    <h2>Welcome to our website!</h2>
-    <p>This is the home page of our Flask application.</p>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Welcome to My Flask App</h1>
+    <p>This is a simple Flask application.</p>
     <ul>
-        <li>Learn Flask</li>
-        <li>Build templates</li>
-        <li>Create routes</li>
+        <li>Flask</li>
+        <li>HTML</li>
+        <li>Templates</li>
     </ul>
-    
-    {% include 'footer.html' %}
-</body>
-</html>
+{% endblock %}
